@@ -18,7 +18,7 @@ Quantum is a modern web browser, built on top of modern web technologies such as
 - [Downloads](#downloads)
 - [Contributing](#contributing)
 - [Development](#development)
-  - [Running](#running)
+  - [Building and Running](#Building-and-Running)
 - [Documentation](#documentation)
 - [License](#license)
 
@@ -114,6 +114,8 @@ yarn install # Install needed depedencies for base-rpc.
 ```
 
 #### Now go back to the main browser-base-updated folder and run the commands below
+
+### Building and Running
 
 ```bash
  yarn install # Install needed depedencies.
