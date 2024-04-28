@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Quantum Browser
+MimeType=application/quantum;
+Icon=/usr/share/pixmaps/quantum.png
+Comment=Open Source elegant browser powered by the SnailDOS team delivering expectational software quality with privacy at key.
+Exec=/opt/quantum/quantum.AppImage
+Categories=WebBrowser;
