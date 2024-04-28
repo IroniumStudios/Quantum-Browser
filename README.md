@@ -51,6 +51,7 @@ Compiling and editing Chromium directly may be challenging and time consuming, s
 - Omnibox with autocomplete algorithm similar to Chromium
 - State of the art tab system
 
+## Building and Running
 
 ```bash
 sudo apt update # Checks for the latest version
@@ -114,8 +115,6 @@ yarn install # Install needed depedencies for base-rpc.
 ```
 
 #### Now go back to the main browser-base-updated folder and run the commands below
-
-### Building and Running
 
 ```bash
  yarn install # Install needed depedencies.
