@@ -23,10 +23,6 @@ Quantum is a modern web browser, built on top of modern web technologies such as
 - [License](#license)
 
 # Motivation
-
-this project was a very good one, it brought intresting things to the table for Quantum, and they discontenued the original project, so i did the honers of forking it and reviving it for years to come.
-
---From The Quantum Devs--
 Compiling and editing Chromium directly may be challenging and time consuming, so we decided to build Quantum with modern web technologies. Hence, the development effort and time is greatly reduced. Either way Firefox is based on Web Components and Chrome implements new dialogs in WebUI (which essentially is hosted in WebContents).
 
 # Features
