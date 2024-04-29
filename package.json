@@ -11,15 +11,15 @@
     "mobx",
     "styled-components"
   ],
-  "homepage": "https://github.com/snaildos/quantum-Browser",
+  "homepage": "https://github.com/IroniumStudios/Quantum-Browser/tree/main?tab=readme-ov-file#Building-and-Running",
   "main": "build/main.bundle.js",
   "author": "Damon Smith <cleverdamontoutube@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snaildos/quantum-Browser.git"
+    "url": "git+https://github.com/IroniumStudios/Quantum-Browser/tree/main?tab=readme-ov-file#Building-and-Running.git"
   },
   "bugs": {
-    "url": "https://github.com/snaildos/quantum-Browser/issues"
+    "url": "https://github.com/IroniumStudios/Quantum-Browser/issues"
   },
   "scripts": {
     "dev-renderer": "cross-env DEV=1 webpack serve --config webpack.config.renderer.js",
