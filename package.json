@@ -1,8 +1,8 @@
 {
   "name": "Quantum",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "sideEffects": false,
-  "description": "Quantum is fast free and secure Web Browser. It is based on Wexond, and includes news and tons of features out of the box. quantum is resource effecient, and is updated often. Powered by SnailDOS!",
+  "description": "Quantum is fast free and secure Web Browser. It is based on Wexond, and includes news and tons of features out of the box. quantum is resource effecient, and is updated often. Powered by Damon Smith!",
   "keywords": [
     "web-browser",
     "material",
@@ -11,12 +11,12 @@
     "mobx",
     "styled-components"
   ],
-  "homepage": "https://github.com/IroniumStudios/Quantum-Browser/tree/main?tab=readme-ov-file#Building-and-Running",
+  "homepage": "https://github.com/IroniumStudios/Quantum-Browser/tree/main",
   "main": "build/main.bundle.js",
   "author": "Damon Smith <cleverdamontoutube@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IroniumStudios/Quantum-Browser/tree/main?tab=readme-ov-file#Building-and-Running.git"
+    "url": "git+https://github.com/IroniumStudios/Quantum-Browser/tree/main.git"
   },
   "bugs": {
     "url": "https://github.com/IroniumStudios/Quantum-Browser/issues"
@@ -40,7 +40,7 @@
     "lint": "concurrently \"eslint \"src/**/*.ts*\" \"src/**/*.tsx*\"\" \"prettier --check \"src/**/*.ts*\" \"src/**/*.tsx*\"\"",
     "lint-fix": "concurrently \"eslint \"src/**/*.ts*\" \"src/**/*.tsx*\" --fix\" \"prettier --write \"src/**/*.ts*\" \"src/**/*.tsx*\"\"",
     "rebuild": "electron-builder install-app-deps",
-    "copyright": "copyright-header --templateId minimal --forceModificationYear 2022 --fix --copyrightHolder SnailDOS --include src"
+    "copyright": "copyright-header --templateId minimal --forceModificationYear 2024 --fix --copyrightHolder Damon Smith --include src"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",

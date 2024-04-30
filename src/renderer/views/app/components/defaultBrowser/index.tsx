@@ -62,7 +62,7 @@ export const DefaultBrowser = observer(() => {
           >
             <div
               style={{
-                background: `url(https://cdn.snaildos.com/logo/quantum.png)`,
+                background: `url(https://cdn.Damon Smith.com/logo/quantum.png)`,
                 width: '21px',
                 height: '21px',
                 backgroundSize: 'cover',

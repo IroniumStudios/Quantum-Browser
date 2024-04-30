@@ -196,32 +196,19 @@ export class View {
       },
     );
 
-    this.webContents.addListener(
-      'new-window',
-      async (e, url, frameName, disposition) => {
-        if (disposition === 'new-window') {
-          if (frameName === '_self') {
-            e.preventDefault();
-            await this.window.viewManager.selected.webContents.loadURL(url);
-          } else if (frameName === '_blank') {
-            e.preventDefault();
-            this.window.viewManager.create(
-              {
-                url,
-                active: true,
-              },
-              true,
-            );
-          }
-        } else if (disposition === 'foreground-tab') {
-          e.preventDefault();
-          this.window.viewManager.create({ url, active: true }, true);
-        } else if (disposition === 'background-tab') {
-          e.preventDefault();
-          this.window.viewManager.create({ url, active: true }, true);
-        }
-      },
-    );
+    this.webContents.setWindowOpenHandler(({ url, frameName, disposition }) => {
+      if (disposition === 'new-window') {
+        this.window.viewManager.create({ url, active: true }, true);
+        return { action: 'deny' };
+      } else if (disposition === 'foreground-tab') {
+        this.window.viewManager.create({ url, active: true }, true);
+        return { action: 'deny' };
+      } else if (disposition === 'background-tab') {
+        this.window.viewManager.create({ url, active: false }, true);
+        return { action: 'deny' };
+      }
+      return { action: 'allow' };
+    });
 
     this.webContents.addListener(
       'did-fail-load',

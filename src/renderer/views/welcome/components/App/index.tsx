@@ -320,7 +320,7 @@ export default observer(() => {
           >
             <div
               style={{
-                background: `url(https://cdn.snaildos.com/logo/quantum/ddg.png)`,
+                background: `url(https://cdn.Damon Smith.com/logo/quantum/ddg.png)`,
                 backgroundSize: 'cover',
                 display: 'flex',
                 height: '3rem',
@@ -333,7 +333,7 @@ export default observer(() => {
           <Option onClick={() => engineset('google')} className="google">
             <div
               style={{
-                background: `url(https://cdn.snaildos.com/logo/quantum/google.png)`,
+                background: `url(https://cdn.Damon Smith.com/logo/quantum/google.png)`,
                 backgroundSize: 'cover',
                 display: 'flex',
                 height: '3rem',
@@ -346,7 +346,7 @@ export default observer(() => {
           <Option onClick={() => engineset('bing')} className="bing">
             <div
               style={{
-                background: `url(https://cdn.snaildos.com/logo/quantum/bing.png)`,
+                background: `url(https://cdn.Damon Smith.com/logo/quantum/bing.png)`,
                 backgroundSize: 'cover',
                 display: 'flex',
                 height: '3rem',
@@ -359,7 +359,7 @@ export default observer(() => {
           <Option onClick={() => engineset('ecosia')} className="ecosia">
             <div
               style={{
-                background: `url(https://cdn.snaildos.com/logo/quantum/ecosia.png)`,
+                background: `url(https://cdn.Damon Smith.com/logo/quantum/ecosia.png)`,
                 backgroundSize: 'cover',
                 display: 'flex',
                 height: '3rem',

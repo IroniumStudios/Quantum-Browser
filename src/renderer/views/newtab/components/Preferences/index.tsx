@@ -1,3 +1,5 @@
+/* Copyright (c) 2021-2024 Damon Smith */
+
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 
@@ -12,7 +14,7 @@ import { Switch } from '~/renderer/components/Switch';
 import { Dropdown } from '~/renderer/components/Dropdown';
 
 import store, { Preset } from '../../store';
-import { ICON_WINDOW, ICON_BACK } from '~/renderer/constants';
+import { ICON_WINDOW, ICON_BACK, ICON_REFRESH } from '~/renderer/constants';
 
 const onBackClick = () => {
   store.preferencesContent = 'main';
@@ -35,6 +37,18 @@ const onSwitchClick = (name: string) => () => {
 
 const onPresetClick = (name: Preset) => () => {
   store.preset = name;
+};
+
+const getWebUIURL = (hostname: string) =>
+  `${WEBUI_BASE_URL}${hostname}${WEBUI_URL_SUFFIX}`;
+
+const onRefreshImageClick = () => {
+  store.image = '';
+  setTimeout(() => {
+    localStorage.setItem('imageDate', '');
+    localStorage.setItem('imageURL', '');
+    store.loadImage(true);
+  }, 50);
 };
 
 export const SwitchItem = observer(
@@ -110,7 +124,7 @@ export const Preferences = observer(() => {
           >
             Inspirational
           </ContextMenuItem>
-          {/* <ContextMenuItem
+           <ContextMenuItem
             bigger
             onClick={onPresetClick('informational')}
             selected={store.preset === 'informational'}
@@ -118,7 +132,7 @@ export const Preferences = observer(() => {
             icon={ICON_WINDOW}
           >
             Informational
-          </ContextMenuItem> */}
+          </ContextMenuItem>
           <ContextMenuItem
             bigger
             selected={store.preset === 'custom'}
@@ -127,6 +141,16 @@ export const Preferences = observer(() => {
             icon={ICON_WINDOW}
           >
             Custom
+          </ContextMenuItem>
+          <ContextMenuSeparator bigger></ContextMenuSeparator>
+          <ContextMenuItem
+            bigger
+            onClick={onRefreshImageClick}
+            iconSize={28}
+            icon={ICON_REFRESH}
+            style={{ cursor: 'pointer' }}
+          >
+            Refresh image
           </ContextMenuItem>
         </div>
         <div
@@ -137,8 +161,7 @@ export const Preferences = observer(() => {
             pointerEvents:
               store.preferencesContent === 'custom' ? 'inherit' : 'none',
             transition: '0.3s max-height, 0.3s transform, 0.3s opacity',
-            // maxHeight: store.preferencesContent === 'custom' ? 390 : 200,
-            maxHeight: store.preferencesContent === 'custom' ? 300 : 150,
+             maxHeight: store.preferencesContent === 'custom' ? 390 : 200,
             transform:
               store.preferencesContent === 'custom'
                 ? 'translateX(-100%)'
@@ -163,7 +186,7 @@ export const Preferences = observer(() => {
           <ContextMenuSeparator bigger></ContextMenuSeparator>
           <SwitchItem name="topSitesVisible">Show top sites</SwitchItem>
           <SwitchItem name="quickMenuVisible">Show quick menu</SwitchItem>
-          {/* <ContextMenuSeparator bigger></ContextMenuSeparator>
+          <ContextMenuSeparator bigger></ContextMenuSeparator>
           <SubTitle>News visibility:</SubTitle>
           <Dropdown
             defaultValue={store.newsBehavior}
@@ -174,9 +197,9 @@ export const Preferences = observer(() => {
             <Dropdown.Item value="always-visible">Always visible</Dropdown.Item>
             <Dropdown.Item value="hidden">Hidden</Dropdown.Item>
             <Dropdown.Item value="on-scroll">Visible on scroll</Dropdown.Item>
-          </Dropdown> */}
+          </Dropdown> 
         </div>
-      </div>
+        </div>
     </ContextMenu>
   );
 });

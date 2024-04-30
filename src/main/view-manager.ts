@@ -12,6 +12,7 @@ import {
 } from '~/constants/web-contents';
 import { EventEmitter } from 'events';
 import { Application } from './application';
+import { extname } from 'path';
 
 export class ViewManager extends EventEmitter {
   public views = new Map<number, View>();

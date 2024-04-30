@@ -38,7 +38,7 @@ export class IBrowserAction {
       this._popup = url;
     } else {
       this._popup = String(
-        Object.assign(new URL('http://snaildos.com'), {
+        Object.assign(new URL('http://Damon Smith.com'), {
           protocol: EXTENSIONS_PROTOCOL,
           hostname: this.extensionId,
           pathname: url,

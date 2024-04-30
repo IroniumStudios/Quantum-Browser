@@ -99,7 +99,7 @@ export default observer(() => {
           What has been changed?
         </Description>
         <Description>
-          Introducing quantum Final 2022 Update (v1.0.0)
+          Introducing quantum Final 2024 Update (v1.0.0)
         </Description>
         <Description>- Add AMOLED Mode</Description>
         <Description>- Rewrite Setup System</Description>
@@ -109,7 +109,7 @@ export default observer(() => {
         <Description>- Security architecture upgrade</Description>
         <Description>Much much more!</Description>
         <a
-          href="https://github.com/snaildos/quantum-Browser/blob/main/CHANGELOG.md"
+          href="https://github.com/Damon Smith/quantum-Browser/blob/main/CHANGELOG.md"
           target="_blank"
           rel="noreferrer"
         >
