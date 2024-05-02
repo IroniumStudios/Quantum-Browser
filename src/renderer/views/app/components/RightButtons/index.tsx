@@ -1,9 +1,7 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
-import * as remote from '@electron/remote';
+
 import { ToolbarButton } from '../ToolbarButton';
 import { BrowserAction } from '../BrowserAction';
 import {
@@ -17,11 +15,20 @@ import store from '../../store';
 import { SiteButtons } from '../SiteButtons';
 
 let menuRef: HTMLDivElement = null;
+let downloadDialogRef: HTMLDivElement = null;
 
-const onDownloadsClick = async (e: React.MouseEvent<HTMLDivElement>) => {
-  const { right, bottom } = e.currentTarget.getBoundingClientRect();
+const showDownloadDialog = async () => {
+  const { right, bottom } = downloadDialogRef.getBoundingClientRect();
   store.downloadNotification = false;
   ipcRenderer.send(`show-downloads-dialog-${store.windowId}`, right, bottom);
+};
+
+ipcRenderer.on('show-download-dialog', () => {
+  showDownloadDialog();
+});
+
+const onDownloadsClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+  showDownloadDialog();
 };
 
 const showMenuDialog = async () => {
@@ -35,16 +42,6 @@ ipcRenderer.on('show-menu-dialog', () => {
 
 const onMenuClick = async () => {
   showMenuDialog();
-};
-
-const onIncognitoClick = () => {
-  // incognitoMenu
-  const { right, bottom } = menuRef.getBoundingClientRect();
-  ipcRenderer.send(
-    `show-incognitoMenu-dialog-${store.windowId}`,
-    right,
-    bottom,
-  );
 };
 
 const BrowserActions = observer(() => {
@@ -77,6 +74,7 @@ export const RightButtons = observer(() => {
 
       {store.downloadsButtonVisible && (
         <ToolbarButton
+          divRef={(r) => (downloadDialogRef = r)}
           size={18}
           badge={store.downloadNotification}
           onMouseDown={onDownloadsClick}
@@ -88,15 +86,7 @@ export const RightButtons = observer(() => {
           value={store.downloadProgress}
         ></ToolbarButton>
       )}
-      {store.isIncognito && (
-        <ToolbarButton
-          icon={ICON_INCOGNITO}
-          style={{ cursor: 'pointer' }}
-          size={18}
-          onMouseDown={onIncognitoClick}
-          toggled={store.dialogsVisibility['incognitoMenu']}
-        />
-      )}
+      {store.isIncognito && <ToolbarButton icon={ICON_INCOGNITO} size={18} />}
       <ToolbarButton
         divRef={(r) => (menuRef = r)}
         toggled={store.dialogsVisibility['menu']}

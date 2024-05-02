@@ -70,5 +70,5 @@ export const DEFAULT_SETTINGS: ISettings = {
   globalPrivacyControl: true,
   topBarVariant: 'default',
   invisibleTabs: undefined,
-  changelog: undefined,
+  notnew: false
 };

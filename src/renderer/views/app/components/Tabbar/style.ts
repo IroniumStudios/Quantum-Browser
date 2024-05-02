@@ -1,6 +1,5 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import styled, { css } from 'styled-components';
+import { platform } from 'os';
 
 import { ToolbarButton } from '../ToolbarButton';
 import {
@@ -19,7 +18,9 @@ export const StyledTabbar = styled.div`
   margin-right: 32px;
   display: flex;
   margin-left: 4px;
-  &:hover {
+`;
+
+/* &:hover {
     ${({ theme }: { theme?: ITheme }) => css`
       &::-webkit-scrollbar-thumb {
         background-color: ${theme['toolbar.lightForeground']
@@ -33,8 +34,7 @@ export const StyledTabbar = styled.div`
         }
       }
     `};
-  }
-`;
+  } */
 
 export const TabsContainer = styled.div`
   height: 100%;

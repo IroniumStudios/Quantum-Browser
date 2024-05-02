@@ -1,5 +1,7 @@
+/* Copyright (c) 2021-2024 Damon Smith */
+
 import { ipcMain, dialog } from 'electron';
-import * as Datastore from '@seald-io/nedb';
+import Nedb, * as Datastore from '@seald-io/nedb';
 import { fileTypeFromBuffer } from 'file-type';
 import * as icojs from 'parse-ico';
 //currently using an alternitive package i sourced from this one -- import { isICO, parseICO } from 'icojs';
@@ -24,7 +26,7 @@ import * as parse from 'node-bookmarks-parser';
 import { Settings } from '../models/settings';
 
 interface Databases {
-  [key: string]: Datastore;
+[key: string]: Nedb;
 }
 
 const convertIcoToPng = async (icoData: Buffer): Promise<ArrayBuffer> => {
@@ -254,12 +256,14 @@ export class StorageService {
     // Combine favicons from DB and items
     const allFavicons = [...faviconsFromDB, ...Array.from(faviconsFromItems)];
   
-    // Update the favicons map
-    allFavicons.forEach((favicon) => {
-      const { url, data } = favicon;
-  
-      if (!this.favicons.get(url)) {
-        this.favicons.set(url, data);
+           // Update the favicons map
+          allFavicons.forEach((favicon) => {
+          if (typeof favicon === 'object' && favicon !== null) {
+          const { url, data } = favicon;
+
+          if (!this.favicons.get(url)) {
+          this.favicons.set(url, data);
+        }
       }
     });
   }

@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { injectFonts } from '~/renderer/mixins';

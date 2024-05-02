@@ -1,7 +1,6 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { ipcRenderer } from 'electron';
 import { observable, computed, makeObservable } from 'mobx';
+import { parse } from 'url';
 import { WEBUI_BASE_URL, WEBUI_PROTOCOL } from '~/constants/files';
 import { DialogStore } from '~/models/dialog-store';
 
@@ -22,7 +21,7 @@ export class Store extends DialogStore {
   // Computed
 
   public get domain() {
-    const parsed = new URL(this.url);
+    const parsed = parse(this.url);
     if (
       WEBUI_BASE_URL.startsWith(WEBUI_PROTOCOL) &&
       this.url.startsWith(WEBUI_BASE_URL)
@@ -32,10 +31,6 @@ export class Store extends DialogStore {
 
     if (parsed.protocol === 'file:') {
       return 'local or shared file';
-    }
-
-    if (parsed.protocol === 'http:') {
-      return 'Unsecure Website';
     }
 
     return parsed.hostname;

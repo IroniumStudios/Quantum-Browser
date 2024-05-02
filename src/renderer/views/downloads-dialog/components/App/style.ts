@@ -1,11 +1,8 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import styled, { css } from 'styled-components';
 import { ITheme } from '~/interfaces';
 import { DialogStyle } from '~/renderer/mixins/dialogs';
 
 export const StyledApp = styled(DialogStyle)`
-  overflow: overlay;
   padding: 8px;
   font-size: 13px;
 

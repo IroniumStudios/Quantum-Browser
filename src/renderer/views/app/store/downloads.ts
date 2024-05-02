@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { makeObservable, observable } from 'mobx';
 import { ipcRenderer } from 'electron';
 

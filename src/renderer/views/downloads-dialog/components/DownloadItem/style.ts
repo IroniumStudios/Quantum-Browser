@@ -1,10 +1,7 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import styled, { css } from 'styled-components';
 import { BLUE_500, ICON_PAGE, ICON_MORE } from '~/renderer/constants';
 import { centerIcon } from '~/renderer/mixins';
 import { ITheme } from '~/interfaces';
-import { getIconByExtension } from '~/renderer/constants/get-icon-ext';
 
 export const StyledDownloadItem = styled.div`
   height: 64px;
@@ -13,7 +10,6 @@ export const StyledDownloadItem = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  overflow: hidden;
   margin-top: 8px;
   transition: 0.1s background-color, 0.1s border;
 
@@ -37,6 +33,9 @@ export const StyledDownloadItem = styled.div`
 export const Title = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
+  ${({ canceled }: { canceled?: boolean }) => css`
+    text-decoration: ${canceled ? 'line-through' : 'none'};
+  `}
 `;
 
 export const SecondaryText = styled.div`
@@ -80,12 +79,13 @@ export const Icon = styled.div`
   width: 24px;
   height: 24px;
   ${centerIcon()};
+  background-image: url(${ICON_PAGE});
   margin-right: 16px;
-  /* opacity: 0.54; */
+  opacity: 0.54;
   margin-left: 16px;
 
-  ${({ ext }: { ext?: string }) => css`
-    background: url(${getIconByExtension(ext.toLowerCase())});
+  ${({ theme }: { theme?: ITheme }) => css`
+    filter: ${theme['dialog.lightForeground'] ? 'invert(100%)' : ''};
   `}
 `;
 
@@ -100,8 +100,9 @@ export const MoreButton = styled.div`
   border-radius: 6px;
   transition: 0.1s background-color;
 
-  ${({ theme }: { theme?: ITheme }) => css`
+  ${({ theme, toggled }: { theme?: ITheme; toggled?: boolean }) => css`
     filter: ${theme['dialog.lightForeground'] ? 'invert(100%)' : ''};
+    background-color: ${toggled ? 'rgba(0, 0, 0, 0.08)' : 'transparent'};
   `}
 
   &:hover {

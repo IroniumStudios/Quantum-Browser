@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 /* eslint @typescript-eslint/camelcase: 0 */
 
 import { action, makeObservable, observable } from 'mobx';
@@ -52,8 +50,9 @@ export class ExtensionsStore {
       let icon1 = default_icon;
 
       if (typeof icon1 === 'object') {
-        icon1 =
-          Object.values(default_icon)[Object.keys(default_icon).length - 1];
+        icon1 = Object.values(default_icon)[
+          Object.keys(default_icon).length - 1
+        ];
       }
 
       const data = await promises.readFile(

@@ -55,7 +55,6 @@ applyEntries(appConfig, [
   'search',
   'menuExtra',
   'incognitoMenu',
-  'changelog',
   'preview',
   'tabgroup',
   'downloads-dialog',

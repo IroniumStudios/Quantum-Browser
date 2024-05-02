@@ -101,20 +101,20 @@ export class Store {
     menuExtra: false,
   };
 
-  // Computed
-
   public get downloadProgress() {
     const downloading = this.downloads.filter((x) => !x.completed);
 
     if (downloading.length === 0) return 0;
 
-    const { totalBytes } = this.downloads.reduce((prev, cur) => ({
+    const { totalBytes, canceledTotal } = downloading.reduce((prev, cur) => ({
       totalBytes: prev.totalBytes + cur.totalBytes,
-    }));
+      canceledTotal: prev.canceledTotal || cur.canceled
+    }), { totalBytes: 0, canceledTotal: false });
 
-    const { receivedBytes } = this.downloads.reduce((prev, cur) => ({
+    const { receivedBytes, canceledReceived } = downloading.reduce((prev, cur) => ({
       receivedBytes: prev.receivedBytes + cur.receivedBytes,
-    }));
+      canceledReceived: prev.canceledReceived && cur.canceled
+    }), { receivedBytes: 0, canceledReceived: false });
 
     return receivedBytes / totalBytes;
   }

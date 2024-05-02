@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 export const isURL = (input: string): boolean => {
   const pattern = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/;
 

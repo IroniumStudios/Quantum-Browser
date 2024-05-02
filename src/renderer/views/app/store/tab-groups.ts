@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { observable, action, makeObservable } from 'mobx';
 
 import { ITabGroup } from '../models';
@@ -73,5 +71,9 @@ export class TabGroupsStore {
     const tabGroup = new ITabGroup(this.store, this);
     this.list.push(tabGroup);
     return tabGroup;
+  }
+
+  public getGroups(): ITabGroup[] {
+    return this.list;
   }
 }

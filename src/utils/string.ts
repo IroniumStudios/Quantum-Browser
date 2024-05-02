@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 export const makeId = (
   length: number,
   possible = 'abcdefghijklmnopqrstuvwxyz',

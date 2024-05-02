@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { ipcRenderer } from 'electron';
 import * as React from 'react';
 import store from '../../store';

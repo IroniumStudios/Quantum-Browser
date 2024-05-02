@@ -125,6 +125,8 @@ export class SessionsService {
       totalBytes: item.getTotalBytes(),
       savePath: item.savePath,
       id,
+      paused: undefined,
+      canceled: undefined
     });
 
     const downloadsDialog = () =>
@@ -288,7 +290,6 @@ export class SessionsService {
 
     ses.clearStorageData({
       storages: [
-        'appcache',
         'cookies',
         'filesystem',
         'indexdb',

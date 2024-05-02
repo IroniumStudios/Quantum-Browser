@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { DIRECTORIES, FILES } from '~/constants/files';
 import { getPath } from '.';
 import { mkdirSync, existsSync, writeFileSync, stat } from 'fs';

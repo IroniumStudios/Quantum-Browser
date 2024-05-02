@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { IHistoryItem, IVisitedItem } from '~/interfaces';
 
 export const countVisitedTimes = (hItems: IHistoryItem[]): IVisitedItem[] => {

@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { loadAsync } from 'jszip';
 import { join, dirname } from 'path';
 import { promises } from 'fs';

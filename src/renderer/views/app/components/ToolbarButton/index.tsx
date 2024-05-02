@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 

@@ -22,7 +22,6 @@ export interface ISettings {
   shield: boolean;
   multrin: boolean;
   notnew: boolean;
-  changelog: string;
   httpsEnforce: boolean;
   animations: boolean;
   bookmarksBar: boolean;

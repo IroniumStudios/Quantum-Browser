@@ -1,6 +1,6 @@
 {
   "name": "Quantum",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "sideEffects": false,
   "description": "Quantum is fast free and secure Web Browser. It is based on Wexond, and includes news and tons of features out of the box. quantum is resource effecient, and is updated often. Powered by Damon Smith!",
   "keywords": [
@@ -26,7 +26,6 @@
     "dev-webpack": "cross-env DEV=1 webpack",
     "build-renderer": "webpack --config webpack.config.renderer.js",
     "dev": "cross-env START=1 npm run watch",
-    "changelog": "gitmoji-changelog",
     "build": "rimraf build && concurrently \"npm run build-renderer\" \"webpack\"",
     "nuke": "rimraf node_modules",
     "ci-build": "node scripts/ci-build.js",
@@ -80,7 +79,6 @@
     "file-loader": "^6.2.0",
     "file-type": "^19.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
-    "gitmoji-changelog": "^2.3.0",
     "html-webpack-plugin": "^5.6.0",
     "jszip": "^3.10.1",
     "mobx": "^6.12.3",

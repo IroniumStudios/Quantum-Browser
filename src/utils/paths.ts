@@ -1,13 +1,11 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { resolve } from 'path';
-import { app } from 'electron';
+import { remote, app } from 'electron';
 
 export const getPath = (...relativePaths: string[]) => {
   let path: string;
 
-  if (process.type !== 'browser') {
-    path = require('@electron/remote').app.getPath('userData');
+  if (remote) {
+    path = remote.app.getPath('userData');
   } else if (app) {
     path = app.getPath('userData');
   } else {

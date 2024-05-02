@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -14,8 +12,10 @@ import {
   SecondaryText,
 } from './style';
 import { IDownloadItem } from '~/interfaces';
-import prettyBytes = require('pretty-bytes');
-import { shell, remote } from 'electron';
+import prettyBytes from 'pretty-bytes';
+const { shell } = require('electron');
+import store from '../../store';
+import { DownloadItemMenu } from '../DownloadItemMenu';
 
 const onClick = (item: IDownloadItem) => () => {
   if (item.completed) {
@@ -25,19 +25,8 @@ const onClick = (item: IDownloadItem) => () => {
 
 const onMoreClick =
   (item: IDownloadItem) => (e: React.MouseEvent<HTMLDivElement>) => {
+    store.openMenu(item);
     e.stopPropagation();
-
-    // const { top, left, x, y } = e.currentTarget.getBoundingClientRect();
-    // const menu = remote.Menu.buildFromTemplate([
-    //   {
-    //     label: "Abrir",
-    //     click: () => {
-    //       onClick(item)
-    //     }
-    //   }
-    // ]);
-
-    // menu.popup({});
   };
 
 export const DownloadItem = observer(({ item }: { item: IDownloadItem }) => {
@@ -51,17 +40,11 @@ export const DownloadItem = observer(({ item }: { item: IDownloadItem }) => {
   }
 
   return (
-    <StyledDownloadItem style={{ cursor: 'pointer' }} onClick={onClick(item)}>
-      <Icon
-        ext={
-          item.fileName.indexOf('.') > -1
-            ? item.fileName.split('.')[item.fileName.split('.').length - 1]
-            : 'none'
-        }
-      ></Icon>
+    <StyledDownloadItem onClick={onClick(item)}>
+      <Icon></Icon>
       <Info>
-        <Title>{item.fileName}</Title>
-        {!item.completed && (
+        <Title canceled={item.canceled}>{item.fileName}</Title>
+        {!item.completed && !item.canceled && (
           <>
             <ProgressBackground>
               <Progress
@@ -70,12 +53,19 @@ export const DownloadItem = observer(({ item }: { item: IDownloadItem }) => {
                 }}
               ></Progress>
             </ProgressBackground>
-            <SecondaryText>{`${received}/${total}`}</SecondaryText>
+            <SecondaryText>{`${received}/${total} ${
+              item.paused ? ', Paused' : ''
+            }`}</SecondaryText>
           </>
         )}
+        {item.canceled && <SecondaryText>Canceled</SecondaryText>}
       </Info>
       <Separator></Separator>
-      <MoreButton onClick={onMoreClick(item)}></MoreButton>
+      <MoreButton
+        toggled={item.menuIsOpen}
+        onClick={onMoreClick(item)}
+      ></MoreButton>
+      <DownloadItemMenu item={item} visible={item.menuIsOpen} />
     </StyledDownloadItem>
   );
 });

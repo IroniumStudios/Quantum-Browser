@@ -1,5 +1,3 @@
-/* Copyright (c) 2021-2024 Damon Smith */
-
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -15,10 +13,10 @@ import {
   TabContainer,
 } from './style';
 import { ICON_VOLUME_HIGH, ICON_VOLUME_OFF } from '~/renderer/constants';
-import { ITab } from '../../models';
+import { ITab, ITabGroup } from '../../models';
 import store from '../../store';
-import * as remote from '@electron/remote';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, nativeImage, Menu } from 'electron';
+import { COMPACT_TAB_MARGIN_TOP } from '~/constants/design';
 
 const removeTab = (tab: ITab) => (e: React.MouseEvent<HTMLDivElement>) => {
   e.stopPropagation();
@@ -59,7 +57,33 @@ const onMouseDown = (tab: ITab) => (e: React.MouseEvent<HTMLDivElement>) => {
 
     store.tabs.lastScrollLeft = store.tabs.containerRef.current.scrollLeft;
   }
+
   ipcRenderer.send(`hide-tab-preview-${store.windowId}`);
+};
+
+const onMouseEnter = (tab: ITab) => (e: React.MouseEvent<HTMLDivElement>) => {
+  if (!store.tabs.isDragging) {
+    store.tabs.hoveredTabId = tab.id;
+  }
+
+  const { bottom, left } = tab.ref.current.getBoundingClientRect();
+
+  const x = left + 8;
+  const y = store.isCompact ? bottom - COMPACT_TAB_MARGIN_TOP : bottom;
+
+  if (store.tabs.canShowPreview && !store.tabs.isDragging) {
+    ipcRenderer.send(`show-tab-preview-${store.windowId}`, {
+      id: tab.id,
+      x,
+      y,
+    });
+  }
+};
+
+const onMouseLeave = () => {
+  store.tabs.hoveredTabId = -1;
+  ipcRenderer.send(`hide-tab-preview-${store.windowId}`);
+  store.tabs.canShowPreview = true;
 };
 
 const onClick = (tab: ITab) => (e: React.MouseEvent<HTMLDivElement>) => {
@@ -81,9 +105,13 @@ const onMouseUp = (tab: ITab) => (e: React.MouseEvent<HTMLDivElement>) => {
 };
 
 const onContextMenu = (tab: ITab) => () => {
-  const menu = remote.Menu.buildFromTemplate([
+  const tabGroups: ITabGroup[] = store.tabGroups
+    .getGroups()
+    .filter((t) => t.id !== tab.tabGroupId);
+
+  const menu = require('@electron/remote').Menu.buildFromTemplate([
     {
-      label: 'Add a tab to the left',
+      label: 'New tab to the right',
       click: () => {
         store.tabs.addTab(
           {
@@ -95,14 +123,18 @@ const onContextMenu = (tab: ITab) => () => {
     },
     {
       label: 'Add to a new group',
+      visible: tabGroups.length === 0,
       click: () => {
-        const tabGroup = store.tabGroups.addGroup();
-        tab.tabGroupId = tabGroup.id;
-        store.tabs.updateTabsBounds(true);
+        addTabToNewGroup(tab);
       },
     },
     {
-      label: 'Remove from a group',
+      label: 'Add tab to group',
+      visible: tabGroups.length > 0,
+      submenu: tabGroupSubmenu(tab, tabGroups),
+    },
+    {
+      label: 'Remove from group',
       visible: !!tab.tabGroup,
       click: () => {
         tab.removeFromGroup();
@@ -125,13 +157,13 @@ const onContextMenu = (tab: ITab) => () => {
       },
     },
     {
-      label: tab.isPinned ? 'Unpin Tab' : 'Pin tab',
+      label: tab.isPinned ? 'Unpin tab' : 'Pin tab',
       click: () => {
         tab.isPinned ? store.tabs.unpinTab(tab) : store.tabs.pinTab(tab);
       },
     },
     {
-      label: tab.isMuted ? 'Unmute window' : 'Mute window',
+      label: tab.isMuted ? 'Unmute tab' : 'Mute tab',
       click: () => {
         tab.isMuted ? store.tabs.unmuteTab(tab) : store.tabs.muteTab(tab);
       },
@@ -140,14 +172,14 @@ const onContextMenu = (tab: ITab) => () => {
       type: 'separator',
     },
     {
-      label: 'Close the tab',
+      label: 'Close tab',
       accelerator: 'CmdOrCtrl+W',
       click: () => {
         tab.close();
       },
     },
     {
-      label: 'Close tabs in group',
+      label: 'Close other tabs',
       click: () => {
         for (const t of store.tabs.list) {
           if (t !== tab) {
@@ -157,7 +189,7 @@ const onContextMenu = (tab: ITab) => () => {
       },
     },
     {
-      label: 'Close tabs to the right',
+      label: 'Close tabs to the left',
       click: () => {
         for (let i = store.tabs.list.indexOf(tab) - 1; i >= 0; i--) {
           store.tabs.list[i].close();
@@ -191,28 +223,88 @@ const onContextMenu = (tab: ITab) => () => {
   menu.popup();
 };
 
+const addTabToNewGroup = (tab: ITab): void => {
+  tab.removeFromGroup();
+  const tabGroup = store.tabGroups.addGroup();
+  tab.tabGroupId = tabGroup.id;
+  store.tabs.updateTabsBounds(true);
+};
+
+const tabGroupSubmenu = (tab: ITab, tabGroups: ITabGroup[]): Menu => {
+  return require('@electron/remote').Menu.buildFromTemplate([
+    {
+      label: 'New group',
+      click: () => {
+        addTabToNewGroup(tab);
+      },
+    },
+    {
+      type: 'separator',
+    },
+    ...tabGroups.map((tabGroup) => ({
+      label: tabGroupLabel(tabGroup),
+      icon: tabGroupIcon(tabGroup.color),
+      click: () => {
+        store.tabs.setTabToGroup(tab, tabGroup.id);
+      },
+    })),
+  ]);
+};
+
+const tabGroupLabel = (tabGroup: ITabGroup): string => {
+  const tabs = store.tabs.list.filter((x) => x.tabGroupId === tabGroup.id);
+  const tabsLength = tabs.length;
+  const tabTitle = tabs[0].title;
+
+  let label =
+    tabGroup.name ||
+    `"${tabTitle.substr(0, 20)}${tabTitle.length > 20 ? '... ' : ''}"`;
+
+  if (!tabGroup.name && tabsLength > 1) {
+    label += ` and ${tabsLength - 1} other tabs`;
+  }
+  return label;
+};
+
+const tabGroupIcon = (color: string): nativeImage => {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  canvas.width = canvas.height = 12;
+
+  context.fillStyle = color;
+  context.beginPath();
+  context.ellipse(
+    canvas.width / 2,
+    canvas.height / 2,
+    canvas.width / 2,
+    canvas.height / 2,
+    0,
+    0,
+    Math.PI * 2,
+  );
+  context.fill();
+  return nativeImage.createFromDataURL(canvas.toDataURL());
+};
+
 const Content = observer(({ tab }: { tab: ITab }) => {
-  const favicon = React.useMemo(() => {
-    if (!tab.favicon) return undefined;
-    if (tab.favicon.startsWith('data:undefined')) return undefined;
-    else return tab.favicon !== '' ? tab.favicon : undefined;
-  }, [tab.favicon]);
   return (
-    <StyledContent title={store.settings.object.invisibleTabs ? tab.url : null}>
-      {!tab.loading && tab.favicon && (
+    <StyledContent>
+      {!tab.loading && tab.favicon !== '' && (
         <StyledIcon
-          isIconSet={favicon !== ''}
-          style={{ backgroundImage: favicon ? `url(${favicon})` : '' }}
+          isIconSet={tab.favicon !== ''}
+          style={{ backgroundImage: `url(${tab.favicon})` }}
         >
           <PinnedVolume tab={tab} />
         </StyledIcon>
       )}
+
       {tab.loading && (
         <Preloader
+          color={store.theme.accentColor}
           thickness={6}
           size={16}
           indeterminate
-          style={{ minWidth: 16, marginRight: '8px' }}
+          style={{ minWidth: 16 }}
         />
       )}
       {!tab.isPinned && (
@@ -221,9 +313,7 @@ const Content = observer(({ tab }: { tab: ITab }) => {
         </StyledTitle>
       )}
       <ExpandedVolume tab={tab} />
-      {!(
-        store.settings.object.showTabOnClose && store.tabs.list.length == 1
-      ) && <Close tab={tab} />}
+      <Close tab={tab} />
     </StyledContent>
   );
 });
@@ -256,8 +346,6 @@ const Close = observer(({ tab }: { tab: ITab }) => {
       onMouseDown={onCloseMouseDown}
       onClick={removeTab(tab)}
       visible={tab.isExpanded && !tab.isPinned}
-      style={{ cursor: 'pointer' }}
-      title={`Close Tab`}
     />
   );
 });
@@ -275,26 +363,15 @@ export default observer(({ tab }: { tab: ITab }) => {
     ? '#393939'
     : '#fcfcfc';
 
-  const invisibleTabs = store.settings.object.invisibleTabs;
-  // var dominant_color;
-
-  // color.getDominantColor(tab.favicon).then(json => {
-  //   if (json.dColor) {
-  //     dominant_color = json.dColor
-  //   }
-
-  //   dominant_color = store.theme['toolbar.backgroundColor'];
-  // }).catch(err => {
-  //   dominant_color = store.theme['toolbar.backgroundColor'];
-  // })
-
   return (
     <StyledTab
       selected={tab.isSelected}
       onMouseDown={onMouseDown(tab)}
       onMouseUp={onMouseUp(tab)}
+      onMouseEnter={onMouseEnter(tab)}
       onContextMenu={onContextMenu(tab)}
       onClick={onClick(tab)}
+      onMouseLeave={onMouseLeave}
       ref={tab.ref}
     >
       <TabContainer
@@ -306,14 +383,12 @@ export default observer(({ tab }: { tab: ITab }) => {
             ? store.isCompact && tab.isHovered
               ? defaultSelectedHoverColor
               : store.theme['toolbar.backgroundColor']
-            : invisibleTabs
-            ? 'transparent'
             : tab.isHovered
             ? defaultHoverColor
             : defaultColor,
           borderColor:
             tab.isSelected && tab.tabGroupId !== -1 && !store.isCompact
-              ? tab.tabGroup.color
+              ? tab.tabGroup?.color
               : 'transparent',
         }}
       >
