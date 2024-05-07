@@ -10,6 +10,9 @@ if you consider supporting me, please donate to my cashapp
 
 Quantum is a modern web browser, built on top of modern web technologies such as `Electron` and `React`, that can also be used as a framework to create a custom web browser (see the [License](#license) section).
 
+## NOTE
+This project has been scrapped and is now LunarWolf, which you can find here: https://github.com/IroniumStudios/LunarWolf-Browser
+
 </div>
 
 # Table of Contents:
